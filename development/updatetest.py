@@ -216,7 +216,7 @@ def total():
     
     #print(entry.get())
 
-img_path = resource_path("arrow-removebg-preview.png")      # put your PNG file path here
+img_path = resource_path("images/arrow-removebg-preview.png")      # put your PNG file path here
 img = Image.open(img_path)
 img = img.resize((30, 30))              # resize if needed
 patch_icon = ImageTk.PhotoImage(img)   
@@ -593,7 +593,7 @@ for r in range(20):     # allow 10 rows
 for c in range(20):      # allow 5 columns
     tab4.grid_columnconfigure(c, weight=1)
 
-upd_path = resource_path("update.png")      # put your PNG file path here
+upd_path = resource_path("images/update.png")      # put your PNG file path here
 upd = Image.open(upd_path)
 upd = upd.resize((30, 30))              # resize if needed
 update_patch_icon = ImageTk.PhotoImage(upd)   

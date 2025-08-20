@@ -214,7 +214,7 @@ def total():
     
     #print(entry.get())
 
-img_path = resource_path("arrow-removebg-preview.png")      # put your PNG file path here
+img_path = resource_path("images/arrow-removebg-preview.png")      # put your PNG file path here
 img = Image.open(img_path)
 img = img.resize((30, 30))              # resize if needed
 patch_icon = ImageTk.PhotoImage(img)   
