@@ -2,7 +2,7 @@ import requests
 import os
 
 APP_VERSION = "2.1"
-VERSION_URL = "https://github.com/fariesabdullah/Number-Converter-/blob/main/version.json"
+VERSION_URL = "https://raw.githubusercontent.com/fariesabdullah/Number-Converter-/refs/heads/main/version.json"
 
 def check_for_update():
     try:
@@ -22,12 +22,26 @@ def check_for_update():
         return False, {}
 
 def download_update(url, filename="update.exe"):
-    print("Downloading update...")
+    
     response = requests.get(url, stream=True)
+    total_size = int(response.headers.get('content-length', 0))  # total size in bytes
+    downloaded = 0
+
     with open(filename, "wb") as f:
         for chunk in response.iter_content(1024):
-            f.write(chunk)
-    print("Download complete. Starting installer...")
-    os.startfile(filename)
+            if chunk:
+                f.write(chunk)
+                downloaded += len(chunk)
 
-check_for_update()
+                if total_size > 0:
+                    percent = (downloaded / total_size) * 100
+                    yield percent
+                    #print(f"\rDownloading... {percent:.2f}%", end="", flush=True)
+    yield 100.0
+    print("\nDownload complete. Starting installer...")
+    os.startfile(filename)
+    
+
+#update, data = check_for_update()
+
+#download_update(data["url"])

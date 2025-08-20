@@ -6,6 +6,8 @@ import APU                                                      # import module 
 from PIL import Image, ImageTk 
 import os , sys
 from enum import Enum
+import updatechecker
+import threading
 
 ##universal file finder
 def resource_path(relative_path):
@@ -33,17 +35,19 @@ root.configure(bg="grey")
 
 ##notebook
 notebook = ttk.Notebook(root)
-notebook.grid(row=0, column=0, sticky="nsew")  # use grid instead of pack
+notebook.grid(row=0, column=0, sticky="nsew")  
 root.grid_rowconfigure(0, weight=2)
 root.grid_columnconfigure(0, weight=2)
 
 tab1 = tk.Frame(notebook, bg="grey")
 tab2 = tk.Frame(notebook, bg="#CCE5FF")
 tab3 = tk.Frame(notebook, bg="#CCCCFF")
+tab4 = tk.Frame(notebook, bg="#CCCCFF")
 
 notebook.add(tab1, text="Converter")
 notebook.add(tab2, text="Patch Notes")
 notebook.add(tab3, text="Help")
+notebook.add(tab4, text="Update")
 ##notebook end
 
 counter = tk.IntVar(value=0)
@@ -500,6 +504,10 @@ patch_text.grid(row=0, column=0, sticky="nsew")
 # Configure scrollbar
 scrollbar.config(command=patch_text.yview)
 patch_text.insert(tk.END, """
+Version 3.0 (Major Update) - 21 Aug 2025
+• Add Update feature to check the current version of the app
+• User can Download the Latest Version of the App (if any) via Update tab 
+                  
 Version 2.3 (Mini Update) - 20 Aug 2025
 • Fix bug on binary 16-bit result bug when the user tick both\n option for showing 4 digit hex and 16 bit binary                 
 
@@ -512,7 +520,7 @@ Version 2.1 (Mini Update) - 18 Aug 2025
 • Added dedicated patch notes page
 • Added dedicated help page
 
-Version 2.0 (Core Update)- 15 Aug 2025
+Version 2.0 (Major Update)- 15 Aug 2025
 • Enhanced number conversion functionality
 • Added support for Hex, Decimal, and Binary conversions
 • Implemented 16-bit binary display option
@@ -541,7 +549,6 @@ Future Updates:
 patch_text.config(state="disabled", bg= "#CCE5FF")
 
 
-#scrollbar.config(command = )
 ##patch content end
 
 
@@ -583,4 +590,61 @@ Credit to:
 
 patch_text2.config(state="disabled", bg= "#CCCCFF")
 ##Help Content End
+
+##Update Content
+
+##For row and column config in tab
+for r in range(20):     # allow 10 rows
+    tab4.grid_rowconfigure(r, weight=1)
+for c in range(20):      # allow 5 columns
+    tab4.grid_columnconfigure(c, weight=1)
+
+upd_path = resource_path("images/update.png")      # put your PNG file path here
+upd = Image.open(upd_path)
+upd = upd.resize((30, 30))              # resize if needed
+update_patch_icon = ImageTk.PhotoImage(upd)   
+
+dow_path = resource_path("images/download.png")      # put your PNG file path here
+dow = Image.open(dow_path)
+dow = dow.resize((30, 30))              # resize if needed
+download_patch_icon = ImageTk.PhotoImage(dow)   
+data = ""
+progressvar = tk.DoubleVar()
+def downloadupdate():
+    global data
+    progressflag = 0
+    progress = ttk.Progressbar(tab4, orient="horizontal" , variable= progressvar,maximum=100, length=300, mode="determinate")
+    progress.grid(row=6, column=9, padx=8 ,pady=10)
+    def rundownload():
+        for progress in updatechecker.download_update(data["url"]):
+            progressvar.set(progress)
+            print("Downloaded % ", progress)
+            root.update_idletasks()
+        tk.Label(tab4, text="Thanks for downloading the new update",bg="#CC99FF", font=("Arial", 12)).grid(row=8, column=9, padx=8 ,pady=10)
+        tk.Label(tab4, text="You can now delete this .exe file\n and use the new downloaded .exe",bg="#CC99FF", font=("Arial", 12)).grid(row=9, column=9, padx=8 ,pady=10)
+        tk.Label(tab4, text="Keep on the support!",bg="#CC99FF", font=("Arial", 12)).grid(row=10, column=9, padx=8 ,pady=10)
+            
+
+    threading.Thread(target=rundownload, daemon=True).start()
+     
+         
+
+def updatetask():
+    global data
+    update, data = updatechecker.check_for_update()
+    print("update: ", update)
+    if update == True:
+        tk.Label(tab4, text="New update available,\n Click 'Download update' to download the update now",bg="#CC99FF", font=("Arial", 12)).grid(row=3, column=9, padx=8 ,pady=10)
+        downloadbutton = tk.Button(tab4, text="Download update",bg="#99FFFF" , image=download_patch_icon, command=downloadupdate ,compound="bottom")
+        downloadbutton.grid(row=5, column=9, columnspan=2)
+        
+    elif update == False and data:
+        tk.Label(tab4, text="App is Up-to-Date, Thanks for the support!",bg="#CC99FF", font=("Arial", 12)).grid(row=3, column=9, padx=8 ,pady=10)
+    
+    else:
+        tk.Label(tab4, text="Checking Fail, Check your Internet Connection",bg="#CC99FF", font=("Arial", 12)).grid(row=3, column=9, padx=8 ,pady=10)
+
+updatebutton = tk.Button(tab4, text="Check for Update",bg="#99FFFF" , image=update_patch_icon,command= updatetask,compound="bottom")
+updatebutton.grid(row=2, column=9, columnspan=2)
+##Update Content End
 root.mainloop()
