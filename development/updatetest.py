@@ -592,7 +592,8 @@ patch_text2.config(state="disabled", bg= "#CCCCFF")
 ##Help Content End
 
 ##Update Content
-
+ttk.Style().configure("TButton", padding=6, relief="flat",
+   background="#ccc")
 ##For row and column config in tab
 for r in range(20):     # allow 10 rows
     tab4.grid_rowconfigure(r, weight=1)
@@ -634,17 +635,21 @@ def updatetask():
     update, data = updatechecker.check_for_update()
     print("update: ", update)
     if update == True:
-        tk.Label(tab4, text="New update available,\n Click 'Download update' to download the update now",bg="#CC99FF", font=("Arial", 12)).grid(row=3, column=9, padx=8 ,pady=10)
-        downloadbutton = tk.Button(tab4, text="Download update",bg="#99FFFF" , image=download_patch_icon, command=downloadupdate ,compound="bottom")
-        downloadbutton.grid(row=5, column=9, columnspan=2)
+        l1=ttk.Label(tab4, text="New update available, Click 'Download update' to download the update now", font=("Arial", 10))#.grid(row=3, column=9, padx=8 ,pady=10)
+        l1.pack()
+        downloadbutton = ttk.Button(tab4, text="Download update", image=download_patch_icon, command=downloadupdate ,compound="left")
+        downloadbutton.pack(pady=5)
+        #downloadbutton.grid(row=5, column=9, columnspan=2)
         
     elif update == False and data:
-        tk.Label(tab4, text="App is Up-to-Date, Thanks for the support!",bg="#CC99FF", font=("Arial", 12)).grid(row=3, column=9, padx=8 ,pady=10)
+        ttk.Label(tab4, text="App is Up-to-Date, Thanks for the support!", font=("Arial", 12))#.grid(row=3, column=9, padx=8 ,pady=10)
     
     else:
-        tk.Label(tab4, text="Checking Fail, Check your Internet Connection",bg="#CC99FF", font=("Arial", 12)).grid(row=3, column=9, padx=8 ,pady=10)
+        ttk.Label(tab4, text="Checking Fail, Check your Internet Connection", font=("Arial", 12))#.grid(row=3, column=9, padx=8 ,pady=10)
 
-updatebutton = tk.Button(tab4, text="Check for Update",bg="#99FFFF" , image=update_patch_icon,command= updatetask,compound="bottom")
-updatebutton.grid(row=2, column=9, columnspan=2)
+
+updatebutton = ttk.Button(tab4, text="Check for Update" , image=update_patch_icon,command= updatetask,compound="left")
+updatebutton.pack(side="top", padx=0, pady=9)
+#updatebutton.grid(row=2, column=9, columnspan=2)
 ##Update Content End
 root.mainloop()
