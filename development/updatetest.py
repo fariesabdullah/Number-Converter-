@@ -611,20 +611,22 @@ dow = dow.resize((30, 30))              # resize if needed
 download_patch_icon = ImageTk.PhotoImage(dow)   
 data = ""
 progressvar = tk.DoubleVar()
+checkpressflag = 0
 def downloadupdate():
     global data
-    progressflag = 0
     progress = ttk.Progressbar(tab4, orient="horizontal" , variable= progressvar,maximum=100, length=300, mode="determinate")
-    progress.grid(row=6, column=9, padx=8 ,pady=10)
+    progress.pack(pady=5)
     def rundownload():
         for progress in updatechecker.download_update(data["url"]):
             progressvar.set(progress)
             print("Downloaded % ", progress)
             root.update_idletasks()
-        tk.Label(tab4, text="Thanks for downloading the new update",bg="#CC99FF", font=("Arial", 12)).grid(row=8, column=9, padx=8 ,pady=10)
-        tk.Label(tab4, text="You can now delete this .exe file\n and use the new downloaded .exe",bg="#CC99FF", font=("Arial", 12)).grid(row=9, column=9, padx=8 ,pady=10)
-        tk.Label(tab4, text="Keep on the support!",bg="#CC99FF", font=("Arial", 12)).grid(row=10, column=9, padx=8 ,pady=10)
-            
+        thankslabel1 = ttk.Label(tab4, text="Thanks for downloading the new update", background="#E5CCFF",font=("Arial", 10))#.grid(row=8, column=9, padx=8 ,pady=10)
+        thankslabel1.pack(pady=5)
+        thankslabel2 = ttk.Label(tab4, text="You can now delete this .exe file and use the new downloaded .exe",background="#E5CCFF", font=("Arial", 10))#.grid(row=9, column=9, padx=8 ,pady=10)
+        thankslabel2.pack(pady=5)
+        thankslabel3 =ttk.Label(tab4, text="Thanks for the support!",background="#E5CCFF", font=("Arial", 10))#.grid(row=10, column=9, padx=8 ,pady=10)
+        thankslabel3.pack(pady=5)    
 
     threading.Thread(target=rundownload, daemon=True).start()
      
@@ -632,24 +634,29 @@ def downloadupdate():
 
 def updatetask():
     global data
+    global checkpressflag
     update, data = updatechecker.check_for_update()
     print("update: ", update)
     if update == True:
-        l1=ttk.Label(tab4, text="New update available, Click 'Download update' to download the update now", font=("Arial", 10))#.grid(row=3, column=9, padx=8 ,pady=10)
+        l1=ttk.Label(tab4, text="New update available, Click 'Download update' to download the update now",background="#E5CCFF", font=("Arial", 10))#.grid(row=3, column=9, padx=8 ,pady=10)
         l1.pack()
-        downloadbutton = ttk.Button(tab4, text="Download update", image=download_patch_icon, command=downloadupdate ,compound="left")
+        downloadbutton = ttk.Button(tab4, text="Download update", image=download_patch_icon, command=downloadupdate ,compound="left",width=20)
         downloadbutton.pack(pady=5)
-        #downloadbutton.grid(row=5, column=9, columnspan=2)
+        checkpressflag = 1
         
     elif update == False and data:
-        ttk.Label(tab4, text="App is Up-to-Date, Thanks for the support!", font=("Arial", 12))#.grid(row=3, column=9, padx=8 ,pady=10)
-    
+        uptodatelabel = ttk.Label(tab4, text="App is Up-to-Date, Thanks for the support!",background="#E5CCFF", font=("Arial", 12))#.grid(row=3, column=9, padx=8 ,pady=10)
+        uptodatelabel.pack(pady=5)
+        checkpressflag = 1
     else:
-        ttk.Label(tab4, text="Checking Fail, Check your Internet Connection", font=("Arial", 12))#.grid(row=3, column=9, padx=8 ,pady=10)
+        noconnectionlabel=ttk.Label(tab4, text="Checking Fail, Check your Internet Connection",background="#E5CCFF", font=("Arial", 12))#.grid(row=3, column=9, padx=8 ,pady=10)
+        noconnectionlabel.pack(pady=5)
+        checkpressflag = 1
 
-
-updatebutton = ttk.Button(tab4, text="Check for Update" , image=update_patch_icon,command= updatetask,compound="left")
+updatebutton = ttk.Button(tab4, text="Check for Update" , image=update_patch_icon,command= updatetask,compound="left",width=20)
 updatebutton.pack(side="top", padx=0, pady=9)
+if checkpressflag == 1:
+    updatebutton = ttk.Button(default="disabled")
 #updatebutton.grid(row=2, column=9, columnspan=2)
 ##Update Content End
 root.mainloop()
