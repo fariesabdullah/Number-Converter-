@@ -9,6 +9,7 @@ from enum import Enum
 import updatechecker
 import threading
 
+#style = ttk.Style()
 ##universal file finder
 def resource_path(relative_path):
     """ Get absolute path to resource, works for dev and for PyInstaller exe """
@@ -30,7 +31,7 @@ root = tk.Tk()
 
 root.title("Number Converter")
 #root.geometry("450x370")
-root.geometry("470x550")
+root.geometry("550x550")
 root.configure(bg="grey")
 
 ##notebook
@@ -39,7 +40,7 @@ notebook.grid(row=0, column=0, sticky="nsew")
 root.grid_rowconfigure(0, weight=2)
 root.grid_columnconfigure(0, weight=2)
 
-tab1 = tk.Frame(notebook, bg="grey")
+tab1 = tk.Frame(notebook, bg="#0080FF")
 tab2 = tk.Frame(notebook, bg="#CCE5FF")
 tab3 = tk.Frame(notebook, bg="#CCCCFF")
 tab4 = tk.Frame(notebook, bg="#CCCCFF")
@@ -50,6 +51,22 @@ notebook.add(tab3, text="Help")
 notebook.add(tab4, text="Update")
 ##notebook end
 
+
+##Separator Start
+left_frame = tk.Frame(tab1 ,bg="#0080FF")
+left_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, )
+
+
+# right frame
+right_frame = tk.Frame(tab1 ,bg="#0080FF")
+right_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
+
+
+# right frame
+centerf = tk.Frame(tab1 ,bg="#0080FF")
+centerf.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
+
+##Separator End
 counter = tk.IntVar(value=0)
 y = 0
 hexflag = 0
@@ -62,31 +79,37 @@ def inc():
 #Selection From Start
 selected_var = tk.StringVar()
 items=["Hex","Dec","Bin"]
-selection_label = tk.Label(tab1, text="From", font=("Arial", 12))
-selection_label.grid(row=0,column=6,columnspan=2,padx=8,pady=10)
-combo = ttk.Combobox(tab1, values=items, textvariable=selected_var, state="readonly")
+selection_label = ttk.Label(left_frame, text="From", font=("Arial", 12), background="#99ccff")
+selection_label.pack(padx=5, pady=20)
+combo = ttk.Combobox(left_frame, values=items, textvariable=selected_var, state="readonly")
 combo.current(0)
-combo.grid(row=1,column=6,columnspan=2,pady=5)
+combo.pack(pady=5, padx=5)
+#combo.grid(row=1,column=6,columnspan=2,pady=5)
 #Selection From End
 
 #Selection To Start
 selected_tovar = tk.StringVar()
-selection_to = tk.Label(tab1, text="To", font=("Arial", 12))
-selection_to.grid(row=0,column=15,columnspan=2,pady=10)
-comboto = ttk.Combobox(tab1, values=items,textvariable = selected_tovar, state="readonly")
+selection_to = ttk.Label(right_frame, text="To", font=("Arial", 12), background="#99ccff")
+selection_to.pack(padx=5, pady=20)
+#selection_to.place(x=390,y=20)
+comboto = ttk.Combobox(right_frame, values=items,textvariable = selected_tovar, state="readonly")
 comboto.current(0)
+comboto.pack(pady=5, padx=5)
 def eventselectionTo(event):                                           #Event Handler Function
     selected_option2 = comboto.get()                                   #To get value
     #print("you selected : " , selected_option2)
 comboto.bind("<<ComboboxSelected>>", eventselectionTo)                 #Event Call
-comboto.grid(row=1,column=15,columnspan=2,pady=5)
+
+#comboto.grid(row=1,column=15,columnspan=2,pady=5)
 #Selection To End
 
 
 #Enter Number Start
-tk.Label(tab1, text="Enter Number:").grid(row=3, column=12, padx=8, pady=8)
-entry = tk.Entry(tab1)
-entry.grid(row=4, column=12, columnspan=2, pady=15)
+enternumberlabel=ttk.Label(centerf, text="Enter Number:",font=("Arial",12), background="#99ccff")
+enternumberlabel.pack(pady=20)
+entry = ttk.Entry(centerf, width=30)
+entry.pack(pady=5)
+#entry.grid(row=4, column=12, columnspan=2, pady=15)
 #valuepad = 0
 decpad=0
 
@@ -106,9 +129,9 @@ def total():
     global currentunit
     print("reset: ", reset)
     print("hexflag: ",hexflag)
-    display2hex = tk.Label(tab1, text=" ", font=("Arial", 12))
+    display2hex = tk.Label(tab1, text=" ", font=("Arial", 12), background="#99ccff")
     display2hex.grid(row=11, column=12, columnspan=2, pady=10)
-    display2dec = tk.Label(tab1, text=" ", font=("Arial", 12))
+    display2dec = tk.Label(tab1, text=" ", font=("Arial", 12), background="#99ccff")
     display2dec.grid(row=14, column=12, columnspan=2, pady=10)
     reset = 1
     if selected_var.get()=="Hex" and selected_tovar.get()== "Bin":
@@ -222,18 +245,28 @@ img_path = resource_path("images/arrow-removebg-preview.png")      # put your PN
 img = Image.open(img_path)
 img = img.resize((30, 30))              # resize if needed
 patch_icon = ImageTk.PhotoImage(img)   
-plusbutton = tk.Button(tab1, text="Convert", command=total,bg="#99FFFF" , image=patch_icon,compound="left")
-plusbutton.grid(row=7, column=12, columnspan=2, pady=8)
+plusbutton = ttk.Button(centerf, text="Convert", command=total,width=20, image=patch_icon,compound="left")
+plusbutton.pack(pady=30)
 #Enter Number End
 
-#Checkbox start
-tk.Label(tab1, text="4 digit hex: ", fg="grey").grid(row=10, column=12, padx=8, pady=8)
-display2hex = tk.Label(tab1, text=" ", font=("Arial", 12))
-display2hex.grid(row=11, column=12, columnspan=2, pady=10)
+#Display result Start
+displaylabelpack = ttk.Label(centerf, text="Result: ", background="#99ccff")
+displaylabelpack.pack( pady=10)
+display_label = ttk.Label(centerf, text=" ", font=("Arial", 12), width=20)
+#display_label.config(text=f"{valueaf}")
+display_label.pack(pady=10)
+#Display result End
 
-tk.Label(tab1, text="16 bit Binary: ", fg="grey").grid(row=13, column=12, padx=8, pady=8)
-display2dec = tk.Label(tab1, text=" ", font=("Arial", 12))
-display2dec.grid(row=14, column=12, columnspan=2, pady=10)
+#Checkbox start
+checkboxlabel1=ttk.Label(centerf, text="4 digit hex: ", background="#99ccff")
+checkboxlabel1.pack(pady=10)
+display2hex = ttk.Label(centerf, text=" ", font=("Arial", 12),width=20)
+display2hex.pack( pady=10)
+
+checkboxlabel2=ttk.Label(centerf, text="16 bit Binary: ", background="#99ccff")
+checkboxlabel2.pack(pady=10)
+display2dec = ttk.Label(centerf, text=" ", font=("Arial", 12),width=20)
+display2dec.pack(pady=10)
 hexbefore=0
 decbefore=0
 def optionchecker():
@@ -472,24 +505,34 @@ def optionchecker():
             hexbefore = hexflag
             decbefore = decflag
 
+
+"""style.configure("Custom.TButton",
+                font=("Arial", 14, "bold"),
+                foreground="white",
+                background="blue",
+                padding=10)
+
+# Hover effect (only works on some themes)
+style.map("Custom.TButton",
+          background=[("active", "darkblue")],
+          foreground=[("active", "yellow")])"""
 hexcheck = tk.IntVar()
-tk.Checkbutton(tab1, text="Show 4 digit hex", variable=hexcheck, font=("Arial", 8),command=optionchecker).grid(row=7, column=16)
+hexcheckbutton = ttk.Checkbutton(right_frame, text="Show 4 digit hex", variable=hexcheck,command=optionchecker)
+hexcheckbutton.pack( pady=45)
 deccheck = tk.IntVar()
-tk.Checkbutton(tab1, text="Show 16 bit Binary", variable=deccheck, font=("Arial", 8),command=optionchecker).grid(row=8, column=16)
+deccheckbutton = ttk.Checkbutton(right_frame, text="Show 16 bit Binary", variable=deccheck,command=optionchecker)
+deccheckbutton.pack(pady=5)
 #Checkbox end
 
-#Display result Start
-tk.Label(tab1, text="Result: ").grid(row=8, column=12, padx=8, pady=8)
-display_label = tk.Label(tab1, text=" ", font=("Arial", 12))
-#display_label.config(text=f"{valueaf}")
-display_label.grid(row=9,column=12,columnspan=2,pady=10)
-#Display result End
+
 
 
 
 #Credit
-tk.Label(tab1, text="©Faries_Abdullah",bg="#C0C0C0", font=("Arial", 7)).grid(row=21, column=12, padx=8 ,pady=10)
-tk.Label(tab1, text="V2.3",bg="#C0C0C0", font=("Arial", 7)).grid(row=22, column=12, padx=8)
+credit1 = ttk.Label(centerf, text="©Faries_Abdullah",background="#C0C0C0", font=("Arial", 7))
+credit1.pack(pady=5)
+credit2 = ttk.Label(centerf, text="V2.3",background="#C0C0C0", font=("Arial", 7))
+credit2.pack(pady=5)
 """submit = tk.Button(root, text="Total", command=total)
 submit.grid(row=8, column=0, columnspan=2, pady=8)"""
 
@@ -655,8 +698,7 @@ def updatetask():
 
 updatebutton = ttk.Button(tab4, text="Check for Update" , image=update_patch_icon,command= updatetask,compound="left",width=20)
 updatebutton.pack(side="top", padx=0, pady=9)
-if checkpressflag == 1:
-    updatebutton = ttk.Button(default="disabled")
+
 #updatebutton.grid(row=2, column=9, columnspan=2)
 ##Update Content End
 root.mainloop()
