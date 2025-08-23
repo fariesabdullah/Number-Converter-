@@ -75,7 +75,9 @@ reset = 0
 
 def inc():
     counter.set(counter.get() + 1)
-    
+
+updatestartflag , dummydata = updatechecker.check_for_update()
+
 #Selection From Start
 selected_var = tk.StringVar()
 items=["Hex","Dec","Bin"]
@@ -114,129 +116,92 @@ entry.pack(pady=5)
 decpad=0
 
 def total():
-    global hexflag
-    global hexbefore
+    global hexflag   
     global decflag
-    global decbefore
-    #print(selected_var.get())
-    tk.Label(tab1, text="                            ",bg="grey", font=("Arial", 8)).grid(row=3,column=6,columnspan=2,pady=10)
-    tk.Label(tab1, text="              ",bg="grey", font=("Arial", 8)).grid(row=4,column=6,columnspan=2,pady=10)
-    tk.Label(tab1, text="                            ",bg="grey", font=("Arial", 8)).grid(row=3,column=15,columnspan=2,pady=10)
-    tk.Label(tab1, text="              ",bg="grey", font=("Arial", 8)).grid(row=4,column=15,columnspan=2,pady=10)
     global valuepad
     global reset
     global decpad
     global currentunit
+ 
     print("reset: ", reset)
     print("hexflag: ",hexflag)
-    display2hex = tk.Label(tab1, text=" ", font=("Arial", 12), background="#99ccff")
-    display2hex.grid(row=11, column=12, columnspan=2, pady=10)
-    display2dec = tk.Label(tab1, text=" ", font=("Arial", 12), background="#99ccff")
-    display2dec.grid(row=14, column=12, columnspan=2, pady=10)
+
     reset = 1
     if selected_var.get()=="Hex" and selected_tovar.get()== "Bin":
         #print("hex to binary")
         currentunit = unit.binary
-        display2dec = tk.Label(tab1, text=" ", font=("Arial", 12))
-        display2dec.grid(row=14, column=12, columnspan=2, pady=10)
-        display2hex
-        display2hex.config(text=f"            ")
-        display2hex.tkraise()
+       
         valueaf = APU.hex_to_bin(entry.get())
         decpad = f"{int(valueaf, 2):016b}" 
         if valueaf != "Error":
-            display_label.config(text=f"{valueaf}",fg="black")
-            if decflag == 1:
-                display2dec.config(text=decpad)
-                display2dec.tkraise()
+            display_label.config(text=f"{decpad}",justify="center",compound="center")
             
         else:
-            display_label.config(text=f"Illegal Input",fg="red")
+            display_label.config(text=f"Illegal Input")
     elif selected_var.get()=="Hex" and selected_tovar.get()== "Dec":
         #print("hex to dec")
         currentunit = unit.decimal
-        display2hex.config(text=f"            ")
-        display2hex.tkraise()
-        display2dec.config(text=f"                                         ")
-        display2dec.tkraise()
+       
         valueaf = APU.hex_to_dec(entry.get())
         if valueaf != "Error":
             #print(valueaf)
-            display_label.config(text=f"{valueaf}",fg="black")
+            display_label.config(text=f"{valueaf}",justify="center",compound="center")
         else:
-            display_label.config(text=f"Illegal Input",fg="red")
+            display_label.config(text=f"Illegal Input")
     elif selected_var.get()=="Dec" and selected_tovar.get()== "Bin":
         #print("Dec to Bin")
         currentunit = unit.binary
-        display2dec = tk.Label(tab1, text=" ", font=("Arial", 12))
-        display2dec.grid(row=14, column=12, columnspan=2, pady=10)  
-        display2hex.config(text=f"            ")
-        display2hex.tkraise()
+       
         valueaf = APU.dec_to_bin(int(entry.get()))
         if valueaf != "Error":
             #print(valueaf)
-            display_label.config(text=f"{valueaf}",fg="black")
             decpad = f"{int(valueaf, 2):016b}" 
-            if decflag == 1:
-                display2dec.config(text=decpad)
-                display2dec.tkraise()
+            display_label.config(text=f"{decpad}",justify="center",compound="center")
+        
                 
         else:
-            display_label.config(text=f"Illegal Input",fg="red")
+            display_label.config(text=f"Illegal Input")
     elif selected_var.get()=="Dec" and selected_tovar.get()== "Hex":
         #print("Dec to Hex")
         currentunit = unit.hexa
-        display2dec.config(text=f"                                         ")
-        display2dec.tkraise()
+       
         valueaf = APU.dec_to_hex((int(entry.get())))
-        valuepad = f"0x{int(valueaf, 16):04X}"
         if valueaf != "Error":
             #print(valueaf)
-            display_label.config(text=f"{valueaf}",fg="black")
-            if hexflag == 1:
-                display2hex.config(text=valuepad)
-                display2hex.tkraise()
+            valuepad = f"0x{int(valueaf, 16):04X}"
+            display_label.config(text=f"{valuepad}",justify="center",compound="center")
+            
+                
                 
         else:
-            display_label.config(text=f"Illegal Input",fg="red")
+            display_label.config(text=f"Illegal Input",justify="center")
     elif selected_var.get()=="Bin" and selected_tovar.get()== "Hex":
         #print("Bin to Hex")
         currentunit = unit.hexa
-        display2hex = tk.Label(tab1, text=" ", font=("Arial", 12))
-        display2hex.grid(row=11, column=12, columnspan=2, pady=10)
-
-        display2dec.config(text=f"                                         ")
-        display2dec.tkraise()
+        
+       
         valueaf = APU.bin_to_hex((entry.get()))
         valuepad = f"0x{int(valueaf, 16):04X}"
         if valueaf != "Error":
             #print(valueaf)
-            display_label.config(text=f"{valueaf}",fg="black")
-            if hexflag == 1:
-                display2hex.config(text=valuepad)
-                display2hex.tkraise()
+            display_label.config(text=f"{valuepad}",justify="center",compound="center")
+
                 
         else:
-            display_label.config(text=f"Illegal Input",fg="red")
+            display_label.config(text=f"Illegal Input")
     elif selected_var.get()=="Bin" and selected_tovar.get()== "Dec":
         #print("Bin to Dec")
         currentunit = unit.decimal
-        display2dec.config(text=f"                                         ")
-        display2dec.tkraise()
-        display2hex.config(text=f"            ")
-        display2hex.tkraise()
+
         valueaf = APU.bin_to_dec((entry.get()))
         if valueaf != "Error":
             #print(valueaf)
-            display_label.config(text=f"{valueaf}",fg="black")
+            display_label.config(text=f"{valueaf}",justify="center")
         else:
-            display_label.config(text=f"Illegal Input",fg="red")
+            display_label.config(text=f"Illegal Input",justify="center",compound="center")
     else:
         #print("error")
-        tk.Label(tab1, text="Error, units must ",fg="red", font=("Arial", 8)).grid(row=3,column=6,columnspan=2,pady=10)
-        tk.Label(tab1, text="be diff ",fg="red", font=("Arial", 8)).grid(row=4,column=6,columnspan=2,pady=10)
-        tk.Label(tab1, text="Error, units must ",fg="red", font=("Arial", 8)).grid(row=3,column=15,columnspan=2,pady=10)
-        tk.Label(tab1, text="be diff ",fg="red", font=("Arial", 8)).grid(row=4,column=15,columnspan=2,pady=10)
+        display_label.config(text=f"Error, Units must be diff",justify="center",compound="center")
     
     
     #print(entry.get())
@@ -252,279 +217,10 @@ plusbutton.pack(pady=30)
 #Display result Start
 displaylabelpack = ttk.Label(centerf, text="Result: ", background="#99ccff")
 displaylabelpack.pack( pady=10)
-display_label = ttk.Label(centerf, text=" ", font=("Arial", 12), width=20)
+display_label = ttk.Label(centerf, text=" ", font=("Arial", 12), width=20, justify="center",compound="center")
 #display_label.config(text=f"{valueaf}")
 display_label.pack(pady=10)
 #Display result End
-
-#Checkbox start
-checkboxlabel1=ttk.Label(centerf, text="4 digit hex: ", background="#99ccff")
-checkboxlabel1.pack(pady=10)
-display2hex = ttk.Label(centerf, text=" ", font=("Arial", 12),width=20)
-display2hex.pack( pady=10)
-
-checkboxlabel2=ttk.Label(centerf, text="16 bit Binary: ", background="#99ccff")
-checkboxlabel2.pack(pady=10)
-display2dec = ttk.Label(centerf, text=" ", font=("Arial", 12),width=20)
-display2dec.pack(pady=10)
-hexbefore=0
-decbefore=0
-def optionchecker():
-    global reset
-    global hexflag
-    global hexbefore
-    global decflag
-    global decbefore
-    global currentunit
-    
-    if hexbefore != hexflag:
-        reset = 1
-    else:
-        reset = 0
-    print("reset: ",reset)
-    print("current unit: ", currentunit)
-    if reset == 1:
-        if hexcheck.get() == 1 and deccheck.get() == 1:  
-            hexflag = 1
-            decflag =1
-            if currentunit == unit.hexa:
-                tk.Label(tab1, text="4 digit hex: ").grid(row=10, column=12, padx=8, pady=8)
-                tk.Label(tab1, text="16 bit Binary: ").grid(row=13, column=12, padx=8, pady=8)
-                display2dec = tk.Label(tab1, text="                                         ", font=("Arial", 12))
-            elif currentunit == unit.binary:
-                tk.Label(tab1, text="4 digit hex: ").grid(row=10, column=12, padx=8, pady=8)
-                display2hex = tk.Label(tab1, text="            ", font=("Arial", 12))
-                tk.Label(tab1, text="16 bit Binary: ").grid(row=13, column=12, padx=8, pady=8)
-            elif currentunit == unit.decimal:
-                tk.Label(tab1, text="4 digit hex: ").grid(row=10, column=12, padx=8, pady=8)
-                display2hex = tk.Label(tab1, text="            ", font=("Arial", 12))
-                display2hex.grid(row=11, column=12, columnspan=2, pady=10)
-
-                tk.Label(tab1, text="16 bit Binary: ").grid(row=13, column=12, padx=8, pady=8)
-                display2dec = tk.Label(tab1, text="                                         ", font=("Arial", 12))
-                display2dec.grid(row=14, column=12, columnspan=2, pady=10)
-            
-            hexbefore = hexflag
-            decbefore = decflag
-        elif hexcheck.get() == 0 and deccheck.get() ==0:
-            hexflag = 0
-            decflag = 0
-            if currentunit != unit.decimal:
-                tk.Label(tab1, text="4 digit hex: ", fg="grey").grid(row=10, column=12, padx=8, pady=8)
-                display2hex = tk.Label(tab1, text="            ", font=("Arial", 12))
-                display2hex.grid(row=11, column=12, columnspan=2, pady=10)
-
-                tk.Label(tab1, text="16 bit Binary: ",fg="grey").grid(row=13, column=12, padx=8, pady=8)
-                display2dec = tk.Label(tab1, text="                                         ", font=("Arial", 12))
-                display2dec.grid(row=14, column=12, columnspan=2, pady=10)
-                
-            elif currentunit == unit.binary:
-                tk.Label(tab1, text="16 bit Binary: ").grid(row=13, column=12, padx=8, pady=8)
-                display2dec = tk.Label(tab1, text="", font=("Arial", 12))
-                display2dec.grid(row=14, column=12, columnspan=2, pady=10)
-                display2dec.config(text=decpad)
-
-                tk.Label(tab1, text="16 bit Binary: ").grid(row=13, column=12, padx=8, pady=8)
-                display2dec = tk.Label(tab1, text="", font=("Arial", 12))
-                display2dec.grid(row=14, column=12, columnspan=2, pady=10)
-                display2dec.config(text=decpad)
-            hexbefore = hexflag
-            decbefore = decflag
-        elif hexcheck.get()==1 and deccheck.get()==0:
-            hexflag=1
-            decflag = 0
-            if currentunit != unit.decimal:
-                tk.Label(tab1, text="16 bit Binary: ",fg="grey").grid(row=13, column=12, padx=8, pady=8)
-                display2dec = tk.Label(tab1, text="                                         ", font=("Arial", 12))
-                display2dec.grid(row=14, column=12, columnspan=2, pady=10)
-
-                ttk.Label(tab1, text="4 digit hex: ").grid(row=10, column=12, padx=8, pady=8)
-            
-            elif currentunit == unit.binary:
-                tk.Label(tab1, text="16 bit Binary: ").grid(row=13, column=12, padx=8, pady=8)
-                display2dec = tk.Label(tab1, text="", font=("Arial", 12))
-                display2dec.grid(row=14, column=12, columnspan=2, pady=10)
-                display2dec.config(text=decpad)
-
-                tk.Label(tab1, text="4 digit hex: ").grid(row=13, column=12, padx=8, pady=8)
-                display2dec = tk.Label(tab1, text="", font=("Arial", 12))
-                display2dec.grid(row=14, column=12, columnspan=2, pady=10)
-                display2dec.config(text=decpad)
-            hexbefore=hexflag
-            decbefore = decflag
-        elif hexcheck.get()==0 and deccheck.get() ==1:
-            hexflag=0
-            decflag = 1
-            if currentunit != unit.decimal:
-                if currentunit == unit.binary:
-                    tk.Label(tab1, text="16 bit Binary: ",fg="grey").grid(row=13, column=12, padx=8, pady=8)
-
-                    tk.Label(tab1, text="4 digit hex: ", fg="grey").grid(row=10, column=12, padx=8, pady=8)
-                    display2hex = tk.Label(tab1, text="            ", font=("Arial", 12))
-                    display2hex.grid(row=11, column=12, columnspan=2, pady=10)
-                    hexbefore=hexflag
-                    decbefore = decflag
-                elif currentunit == unit.hexa:
-                    tk.Label(tab1, text="4 digit hex: ", fg="grey").grid(row=10, column=12, padx=8, pady=8)
-                    display2hex = tk.Label(tab1, text="            ", font=("Arial", 12))
-                    display2hex.grid(row=11, column=12, columnspan=2, pady=10)
-
-                    tk.Label(tab1, text="16 bit Binary: ",fg="grey").grid(row=13, column=12, padx=8, pady=8)
-                    display2dec = tk.Label(tab1, text="                                         ", font=("Arial", 12))
-                    display2dec.grid(row=14, column=12, columnspan=2, pady=10)
-            elif currentunit == unit.binary:
-                tk.Label(tab1, text="16 bit Binary: ").grid(row=13, column=12, padx=8, pady=8)
-                display2dec = tk.Label(tab1, text="", font=("Arial", 12))
-                display2dec.grid(row=14, column=12, columnspan=2, pady=10)
-                display2dec.config(text=decpad)
-
-                tk.Label(tab1, text="16 bit Binary: ").grid(row=13, column=12, padx=8, pady=8)
-                display2dec = tk.Label(tab1, text="", font=("Arial", 12))
-                display2dec.grid(row=14, column=12, columnspan=2, pady=10)
-                display2dec.config(text=decpad)
-            hexbefore=hexflag
-            decbefore = decflag
-
-    elif reset == 0:
-        if hexcheck.get() == 1 and deccheck.get() ==1:
-            hexflag = 1
-            decflag = 1
-            if currentunit == unit.hexa:
-                tk.Label(tab1, text="4 digit hex: ").grid(row=10, column=12, padx=8, pady=8)
-                display2hex = tk.Label(tab1, text="", font=("Arial", 12))
-                display2hex.grid(row=11, column=12, columnspan=2, pady=10)
-                display2hex.config(text=valuepad)
-
-                tk.Label(tab1, text="16 bit Binary: ").grid(row=13, column=12, padx=8, pady=8)
-                display2dec = tk.Label(tab1, text="                                         ", font=("Arial", 12))
-                display2dec.grid(row=14, column=12, columnspan=2, pady=10)
-            elif currentunit == unit.binary:
-                tk.Label(tab1, text="4 digit hex: ").grid(row=10, column=12, padx=8, pady=8)
-                display2hex = tk.Label(tab1, text="            ", font=("Arial", 12))
-                display2hex.grid(row=11, column=12, columnspan=2, pady=10)
-
-                tk.Label(tab1, text="16 bit Binary: ").grid(row=13, column=12, padx=8, pady=8)
-                display2dec = tk.Label(tab1, text="", font=("Arial", 12))
-                display2dec.grid(row=14, column=12, columnspan=2, pady=10)
-                display2dec.config(text=decpad)
-            elif currentunit == unit.decimal:
-                tk.Label(tab1, text="4 digit hex: ", fg="grey").grid(row=10, column=12, padx=8, pady=8)
-                display2hex = tk.Label(tab1, text="            ", font=("Arial", 12))
-                display2hex.grid(row=11, column=12, columnspan=2, pady=10)
-
-                tk.Label(tab1, text="16 bit Binary: ",fg="grey").grid(row=13, column=12, padx=8, pady=8)
-                display2dec = tk.Label(tab1, text="                                         ", font=("Arial", 12))
-                display2dec.grid(row=14, column=12, columnspan=2, pady=10)
-            
-            hexbefore = hexflag
-            decbefore = decflag
-        elif hexcheck.get() == 0 and deccheck.get() == 0:
-            hexflag = 0
-            decflag = 0
-            if currentunit != unit.decimal:
-                tk.Label(tab1, text="4 digit hex: ", fg="grey").grid(row=10, column=12, padx=8, pady=8)
-                display2hex = tk.Label(tab1, text="            ", font=("Arial", 12))
-                display2hex.grid(row=11, column=12, columnspan=2, pady=10)
-
-                tk.Label(tab1, text="16 bit Binary: ",fg="grey").grid(row=13, column=12, padx=8, pady=8)
-                display2dec = tk.Label(tab1, text="                                         ", font=("Arial", 12))
-                display2dec.grid(row=14, column=12, columnspan=2, pady=10)
-                
-            elif currentunit == unit.decimal:
-                tk.Label(tab1, text="4 digit hex: ", fg="grey").grid(row=10, column=12, padx=8, pady=8)
-                display2hex = tk.Label(tab1, text="            ", font=("Arial", 12))
-                display2hex.grid(row=11, column=12, columnspan=2, pady=10)
-
-                tk.Label(tab1, text="16 bit Binary: ",fg="grey").grid(row=13, column=12, padx=8, pady=8)
-                display2dec = tk.Label(tab1, text="                                         ", font=("Arial", 12))
-                display2dec.grid(row=14, column=12, columnspan=2, pady=10)
-            hexbefore=hexflag
-            decbefore = decflag
-        elif hexcheck.get()==1 and deccheck.get()==0:
-            hexflag=1
-            decflag = 0
-            if currentunit != unit.decimal:
-                if currentunit == unit.hexa:
-                    tk.Label(tab1, text="4 digit hex: ").grid(row=10, column=12, padx=8, pady=8)
-                    display2hex = tk.Label(tab1, text="", font=("Arial", 12))
-                    display2hex.grid(row=11, column=12, columnspan=2, pady=10)
-                    display2hex.config(text=valuepad)
-
-                    tk.Label(tab1, text="16 bit Binary: ",fg="grey").grid(row=13, column=12, padx=8, pady=8)
-                    display2dec = tk.Label(tab1, text="                                         ", font=("Arial", 12))
-                    display2dec.grid(row=14, column=12, columnspan=2, pady=10)
-                    
-                elif currentunit != unit.hexa:
-                    tk.Label(tab1, text="4 digit hex: ").grid(row=10, column=12, padx=8, pady=8)
-                    display2hex = tk.Label(tab1, text="            ", font=("Arial", 12))
-                    display2hex.grid(row=11, column=12, columnspan=2, pady=10)
-
-                    tk.Label(tab1, text="16 bit Binary: ",fg="grey").grid(row=13, column=12, padx=8, pady=8)
-                    display2dec = tk.Label(tab1, text="                                         ", font=("Arial", 12))
-                    display2dec.grid(row=14, column=12, columnspan=2, pady=10)
-                hexbefore=hexflag
-                decbefore = decflag
-            elif currentunit == unit.decimal:
-                tk.Label(tab1, text="4 digit hex: ", fg="grey").grid(row=10, column=12, padx=8, pady=8)
-                display2hex = tk.Label(tab1, text="            ", font=("Arial", 12))
-                display2hex.grid(row=11, column=12, columnspan=2, pady=10)
-
-                tk.Label(tab1, text="16 bit Binary: ",fg="grey").grid(row=13, column=12, padx=8, pady=8)
-                display2dec = tk.Label(tab1, text="                                         ", font=("Arial", 12))
-                display2dec.grid(row=14, column=12, columnspan=2, pady=10)
-        elif hexcheck.get()==0 and deccheck.get()==1:
-            hexflag=0
-            decflag = 1
-            if currentunit != unit.decimal:
-                if currentunit == unit.hexa:
-                    tk.Label(tab1, text="4 digit hex: ", fg="grey").grid(row=10, column=12, padx=8, pady=8)
-                    display2hex = tk.Label(tab1, text="            ", font=("Arial", 12))
-                    display2hex.grid(row=11, column=12, columnspan=2, pady=10)
-
-                    tk.Label(tab1, text="16 bit Binary: ",fg="grey").grid(row=13, column=12, padx=8, pady=8)
-                    display2dec = tk.Label(tab1, text="                                         ", font=("Arial", 12))
-                    display2dec.grid(row=14, column=12, columnspan=2, pady=10)
-                elif currentunit == unit.binary:
-                    tk.Label(tab1, text="4 digit hex: ", fg="grey").grid(row=10, column=12, padx=8, pady=8)
-                    display2hex = tk.Label(tab1, text="            ", font=("Arial", 12))
-                    display2hex.grid(row=11, column=12, columnspan=2, pady=10)
-
-                    tk.Label(tab1, text="16 bit Binary: ").grid(row=13, column=12, padx=8, pady=8)
-                    display2dec = tk.Label(tab1, text="", font=("Arial", 12))
-                    display2dec.grid(row=14, column=12, columnspan=2, pady=10)
-                    display2dec.config(text=decpad)
-                
-            elif currentunit == unit.decimal:
-                tk.Label(tab1, text="4 digit hex: ", fg="grey").grid(row=10, column=12, padx=8, pady=8)
-                display2hex = tk.Label(tab1, text="            ", font=("Arial", 12))
-                display2hex.grid(row=11, column=12, columnspan=2, pady=10)
-
-                tk.Label(tab1, text="16 bit Binary: ",fg="grey").grid(row=13, column=12, padx=8, pady=8)
-                display2dec = tk.Label(tab1, text="                                         ", font=("Arial", 12))
-                display2dec.grid(row=14, column=12, columnspan=2, pady=10)
-            hexbefore = hexflag
-            decbefore = decflag
-
-
-"""style.configure("Custom.TButton",
-                font=("Arial", 14, "bold"),
-                foreground="white",
-                background="blue",
-                padding=10)
-
-# Hover effect (only works on some themes)
-style.map("Custom.TButton",
-          background=[("active", "darkblue")],
-          foreground=[("active", "yellow")])"""
-hexcheck = tk.IntVar()
-hexcheckbutton = ttk.Checkbutton(right_frame, text="Show 4 digit hex", variable=hexcheck,command=optionchecker)
-hexcheckbutton.pack( pady=45)
-deccheck = tk.IntVar()
-deccheckbutton = ttk.Checkbutton(right_frame, text="Show 16 bit Binary", variable=deccheck,command=optionchecker)
-deccheckbutton.pack(pady=5)
-#Checkbox end
-
-
 
 
 
@@ -533,21 +229,29 @@ credit1 = ttk.Label(centerf, text="©Faries_Abdullah",background="#C0C0C0", font
 credit1.pack(pady=5)
 credit2 = ttk.Label(centerf, text="V2.3",background="#C0C0C0", font=("Arial", 7))
 credit2.pack(pady=5)
-"""submit = tk.Button(root, text="Total", command=total)
-submit.grid(row=8, column=0, columnspan=2, pady=8)"""
+
+if(updatestartflag == True):
+    credit3 = ttk.Label(centerf, text="New Update Available\nGo to Update tab to download\n the new update now",background="#C0C0C0", font=("Arial", 9),justify="center")
+    credit3.pack(pady=5)
+
 
 ##patch content
-scrollbar = tk.Scrollbar(tab2)
-scrollbar.grid(row=0, column=1, sticky="ns")
+scrollbar = ttk.Scrollbar(tab2)
+scrollbar.pack(side="right", fill="both")
 
 # Create Text widget (instead of Label)
-patch_text = tk.Text(tab2, wrap="word", yscrollcommand=scrollbar.set, width=64, height=40)
-patch_text.grid(row=0, column=0, sticky="nsew")
+patch_text = tk.Text(tab2, wrap="word", yscrollcommand=scrollbar.set, width=550, height=550)
+#patch_text.grid(row=0, column=0, sticky="nsew")
+patch_text.pack()
 
 # Configure scrollbar
 scrollbar.config(command=patch_text.yview)
 patch_text.insert(tk.END, """
-Version 2.3 (Mini Update) - 20 Aug 2025
+Version 4.0 (Major Update) - 24 Aug 2025
+• UI revamp
+• Additional Option is now removed
+                  
+Version 3.0 (Major Update) - 20 Aug 2025
 • Add Update feature to check the current version of the app
 • User can Download the Latest Version of the App (if any) via Update tab 
                   
@@ -597,11 +301,11 @@ patch_text.config(state="disabled", bg= "#CCE5FF")
 
 ##Help Content
 scrollbar2 = tk.Scrollbar(tab3)
-scrollbar2.grid(row=0, column=1, sticky="ns")
+scrollbar2.pack(side="right",fill="both")
 
 # Create Text widget (instead of Label)
-patch_text2 = tk.Text(tab3, wrap="word", yscrollcommand=scrollbar2.set, width=64, height=40)
-patch_text2.grid(row=0, column=0, sticky="nsew")
+patch_text2 = tk.Text(tab3, wrap="word", yscrollcommand=scrollbar2.set, width=550, height=550)
+patch_text2.pack()
 
 # Configure scrollbar
 scrollbar2.config(command=patch_text2.yview)
@@ -611,12 +315,10 @@ How to Use:
 2. Select the target number system from the "To" dropdown
 3. Enter your number in the input field
 4. Click "Convert" to see the result
-5. Use checkboxes to show additional format representations
                    
 Features:
 • Convert between Hexadecimal, Decimal, and Binary number systems
 • Optional display of 16-bit binary representation
-• Optional display of hex signed 2's complement
 • Input validation and error handling
 • Clean and intuitive user interface
 

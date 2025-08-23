@@ -1,7 +1,7 @@
 import requests
 import os
 
-APP_VERSION = "2.1"
+APP_VERSION = "4.0"
 VERSION_URL = "https://raw.githubusercontent.com/fariesabdullah/Number-Converter-/refs/heads/main/version.json"
 
 def check_for_update():
@@ -41,7 +41,23 @@ def download_update(url, filename="update.exe"):
     print("\nDownload complete. Starting installer...")
     os.startfile(filename)
     
-
+def checkupdatestart():
+    try:
+        response = requests.get(VERSION_URL, timeout=5)
+        data = response.json()
+        latest_version = data["version"]
+        print(latest_version)
+        if latest_version > APP_VERSION:
+            print(f"Update available: {latest_version}")
+            print("Release notes:\n", data.get("notes", ""))
+            return True, data
+        else:
+            print("You are up to date.")
+            return False, data
+    except Exception as e:
+        print("Failed to check for updates:", e)
+        return False, {}
+    
 #update, data = check_for_update()
 
 #download_update(data["url"])
