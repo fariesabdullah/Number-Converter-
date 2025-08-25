@@ -1,7 +1,7 @@
 import requests
 import os
 
-APP_VERSION = "4.0"
+APP_VERSION = "4.1"
 VERSION_URL = "https://raw.githubusercontent.com/fariesabdullah/Number-Converter-/refs/heads/main/version.json"
 
 def check_for_update():
