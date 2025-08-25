@@ -334,6 +334,7 @@ Supported Conversions:
 Credit to:
 • Lee San Hang (QA)
 • Chan Shi Chin (QA)
+• Umi Umairah (QA)                   
 """)
 
 patch_text2.config(state="disabled", bg= "#CCCCFF")
