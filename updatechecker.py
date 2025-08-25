@@ -21,7 +21,7 @@ def check_for_update():
         print("Failed to check for updates:", e)
         return False, {}
 
-def download_update(url, filename="update.exe"):
+def download_update(url, filename="numberconverter.exe"):
     
     response = requests.get(url, stream=True)
     total_size = int(response.headers.get('content-length', 0))  # total size in bytes

@@ -53,17 +53,17 @@ notebook.add(tab4, text="Update")
 
 
 ##Separator Start
-left_frame = tk.Frame(tab1 ,bg="#0080FF")
+left_frame = tk.Frame(tab1 ,bg="#9999ff")
 left_frame.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, )
 
 
 # right frame
-right_frame = tk.Frame(tab1 ,bg="#0080FF")
+right_frame = tk.Frame(tab1 ,bg="#9999ff")
 right_frame.pack(side=tk.RIGHT, fill=tk.BOTH, expand=True)
 
 
 # right frame
-centerf = tk.Frame(tab1 ,bg="#0080FF")
+centerf = tk.Frame(tab1 ,bg="#9999ff")
 centerf.pack(side=tk.TOP, fill=tk.BOTH, expand=True)
 
 ##Separator End
@@ -81,7 +81,7 @@ updatestartflag , dummydata = updatechecker.check_for_update()
 #Selection From Start
 selected_var = tk.StringVar()
 items=["Hex","Dec","Bin"]
-selection_label = ttk.Label(left_frame, text="From", font=("Arial", 12), background="#99ccff")
+selection_label = ttk.Label(left_frame, text="From", font=("Helvetica", 12), background="#ccccff")
 selection_label.pack(padx=5, pady=20)
 combo = ttk.Combobox(left_frame, values=items, textvariable=selected_var, state="readonly")
 combo.current(0)
@@ -91,7 +91,7 @@ combo.pack(pady=5, padx=5)
 
 #Selection To Start
 selected_tovar = tk.StringVar()
-selection_to = ttk.Label(right_frame, text="To", font=("Arial", 12), background="#99ccff")
+selection_to = ttk.Label(right_frame, text="To", font=("Helvetica", 12), background="#ccccff")
 selection_to.pack(padx=5, pady=20)
 #selection_to.place(x=390,y=20)
 comboto = ttk.Combobox(right_frame, values=items,textvariable = selected_tovar, state="readonly")
@@ -107,7 +107,7 @@ comboto.bind("<<ComboboxSelected>>", eventselectionTo)                 #Event Ca
 
 
 #Enter Number Start
-enternumberlabel=ttk.Label(centerf, text="Enter Number:",font=("Arial",12), background="#99ccff")
+enternumberlabel=ttk.Label(centerf, text="Enter Number:",font=("Arial",12), background="#ccccff")
 enternumberlabel.pack(pady=20)
 entry = ttk.Entry(centerf, width=30)
 entry.pack(pady=5)
@@ -215,7 +215,7 @@ plusbutton.pack(pady=30)
 #Enter Number End
 
 #Display result Start
-displaylabelpack = ttk.Label(centerf, text="Result: ", background="#99ccff")
+displaylabelpack = ttk.Label(centerf, text="Result: ", background="#ccccff")
 displaylabelpack.pack( pady=10)
 display_label = ttk.Label(centerf, text=" ", font=("Arial", 12), width=20, justify="center",compound="center")
 #display_label.config(text=f"{valueaf}")
@@ -225,10 +225,10 @@ display_label.pack(pady=10)
 
 
 #Credit
-credit1 = ttk.Label(centerf, text="©Faries_Abdullah",background="#C0C0C0", font=("Arial", 7))
-credit1.pack(pady=5)
-credit2 = ttk.Label(centerf, text="V2.3",background="#C0C0C0", font=("Arial", 7))
-credit2.pack(pady=5)
+credit1 = ttk.Label(centerf, text="©Faries_Abdullah",background="#C0C0C0", font=("Helvetica", 7))
+credit1.pack(pady=5,side="bottom")
+credit2 = ttk.Label(centerf, text="V4.1",background="#C0C0C0", font=("Arial", 7))
+credit2.pack(pady=5, side="bottom")
 
 if(updatestartflag == True):
     credit3 = ttk.Label(centerf, text="New Update Available\nGo to Update tab to download\n the new update now",background="#C0C0C0", font=("Arial", 9),justify="center")
@@ -247,6 +247,9 @@ patch_text.pack()
 # Configure scrollbar
 scrollbar.config(command=patch_text.yview)
 patch_text.insert(tk.END, """
+Version 4.1 (Mini Update) - 25 Aug 2025
+• Minor Changes to UI
+                  
 Version 4.0 (Major Update) - 24 Aug 2025
 • UI revamp
 • Additional Option is now removed
